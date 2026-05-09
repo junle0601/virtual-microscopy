@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600;700&family=Lato:wght@400;700;900&family=Montserrat:wght@400;600;700;800&family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Righteous&family=Roboto:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Professional Aged Paper Palette */
+    --case-paper: #F5E6D3;
+    --case-paper-dark: #E8D7C3;
+    --case-paper-muted: #D7CCC8;
+    --case-ink: #2C1810;
+    --case-ink-dark: #3E2723;
+    --case-red: #D32F2F;
+    --case-red-dark: #C62828;
+    --case-brass: #B8860B;
+    --case-green: #2E7D32;
+
+    /* Standard Tailwind Mappings */
+    --background: 34 50% 89%; /* #F5E6D3 */
+    --foreground: 20 29% 12%; /* #2C1810 */
+    --primary: 20 29% 12%;
+    --primary-foreground: 34 50% 89%;
+    --secondary: 0 65% 51%; /* #D32F2F */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 33 43% 84%; /* #E8D7C3 */
+    --muted-foreground: 15 28% 20%;
+    --accent: 0 65% 51%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 65% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 29% 12%;
+    --input: 33 43% 84%;
+    --ring: 0 65% 51%;
+    --radius: 0.25rem;
+
+    /* Professional Font Families */
+    --font-bebas: 'Bebas Neue', sans-serif;
+    --font-oswald: 'Oswald', sans-serif;
+    --font-montserrat: 'Montserrat', sans-serif;
+    --font-poppins: 'Poppins', sans-serif;
+    --font-roboto: 'Roboto', sans-serif;
+    --font-lato: 'Lato', sans-serif;
+    --font-ibm-plex: 'IBM Plex Mono', monospace;
+    --font-space-mono: 'Space Mono', monospace;
+    --font-righteous: 'Righteous', cursive;
+  }
+
+  .dark {
+    --background: 20 29% 12%;
+    --foreground: 34 50% 89%;
+    --primary: 34 50% 89%;
+    --primary-foreground: 20 29% 12%;
+    --secondary: 0 65% 51%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 15 28% 20%;
+    --muted-foreground: 33 43% 84%;
+    --accent: 0 65% 51%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 65% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 34 50% 89%;
+    --input: 15 28% 20%;
+    --ring: 0 65% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-roboto);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-montserrat);
+  }
+}
+
+@layer components {
+  /* Font Utility Classes */
+  .font-bebas { font-family: var(--font-bebas); }
+  .font-oswald { font-family: var(--font-oswald); }
+  .font-montserrat { font-family: var(--font-montserrat); }
+  .font-poppins { font-family: var(--font-poppins); }
+  .font-roboto { font-family: var(--font-roboto); }
+  .font-lato { font-family: var(--font-lato); }
+  .font-ibm-plex { font-family: var(--font-ibm-plex); }
+  .font-space-mono { font-family: var(--font-space-mono); }
+  .font-righteous { font-family: var(--font-righteous); }
+
+  /* Professional Detective Styles */
+  .case-bg {
+    background-color: var(--case-paper);
+    background-image: url('https://images.unsplash.com/photo-1695037520034-01ddfe877c5f');
+    background-size: cover;
+    background-blend-mode: multiply;
+    color: var(--case-ink);
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(44, 24, 16, 0.15);
+  }
+
+  .board-bg {
+    background-color: #3E2723;
+    background-image: url('https://images.unsplash.com/photo-1677773893121-b00ae633b28c');
+    background-size: cover;
+    background-blend-mode: overlay;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+  }
+
+  .case-folder {
+    background-color: var(--case-paper-dark);
+    background-image: url('https://images.unsplash.com/photo-1695037520034-01ddfe877c5f');
+    background-size: cover;
+    background-blend-mode: multiply;
+    border: 1px solid rgba(44, 24, 16, 0.2);
+    border-radius: 4px 12px 4px 4px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    position: relative;
+  }
+
+  .case-folder::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(225deg, transparent 50%, rgba(44, 24, 16, 0.1) 50%);
+    border-bottom-left-radius: 4px;
+  }
+
+  /* Professional Stamps */
+  .case-stamp {
+    font-family: var(--font-bebas);
+    color: var(--case-red);
+    border: 3px solid var(--case-red);
+    padding: 0.25rem 1rem;
+    display: inline-block;
+    opacity: 0.9;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: bold;
+    background: rgba(211, 47, 47, 0.05);
+  }
+
+  .case-stamp-green {
+    color: var(--case-green);
+    border-color: var(--case-green);
+    background: rgba(46, 125, 50, 0.05);
+  }
+
+  .case-stamp-dark {
+    color: var(--case-ink);
+    border-color: var(--case-ink);
+    background: rgba(44, 24, 16, 0.05);
+  }
+
+  /* Badges */
+  .case-badge {
+    font-family: var(--font-oswald);
+    background-color: var(--case-ink);
+    color: var(--case-paper);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+
+  /* Frames and Borders */
+  .case-frame {
+    background: #ffffff;
+    padding: 0.5rem;
+    border: 1px solid rgba(44, 24, 16, 0.3);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  .case-border {
+    border: 2px solid rgba(44, 24, 16, 0.2);
+  }
+
+  .case-border-red {
+    border: 2px solid rgba(211, 47, 47, 0.3);
+  }
+
+  /* Subtle Accents */
+  .case-tape-subtle {
+    position: absolute;
+    width: 80px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    backdrop-filter: blur(2px);
+    z-index: 20;
+    border-left: 1px dashed rgba(255,255,255,0.6);
+    border-right: 1px dashed rgba(255,255,255,0.6);
+  }
+
+  .case-pin-subtle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #e0e0e0, #9e9e9e);
+    box-shadow: inset -1px -1px 2px rgba(0,0,0,0.3), 1px 1px 3px rgba(0,0,0,0.2);
+    z-index: 20;
+  }
+
+  .file-tab {
+    background-color: var(--case-paper-dark);
+    border: 1px solid rgba(44, 24, 16, 0.2);
+    border-bottom: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px 4px 0 0;
+    font-family: var(--font-ibm-plex);
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+    transition: all 0.2s ease;
+  }
+  
+  .file-tab[data-state="active"] {
+    background-color: var(--case-paper);
+    z-index: 10;
+    border-bottom: 1px solid var(--case-paper);
+  }
+}
+
+@layer utilities {
+  .animate-stamp {
+    animation: stamp-appear 0.3s ease-out forwards;
+  }
+}
+
+@keyframes stamp-appear {
+  0% { opacity: 0; transform: scale(1.5); }
+  100% { opacity: 0.9; transform: scale(1); }
+}
