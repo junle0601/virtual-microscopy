@@ -6,11 +6,36 @@ const db = require('./db');
 const app = express();
 
 // Middleware
+// app.use(cors({
+//     origin: process.env.FRONTEND_URL || '*',
+//     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    origin: function(origin, callback) {
+        //Allow requests with no origin (mobile apps, curl, etc)
+        if(!origin) return callback(null, true);
+
+        const allowedOrigins = [
+            process.env.FRONTEND_URL,
+             'http://localhost:3000',
+             'http://localhost:5173'
+        ].filter(Boolean);
+
+        if(allowedOrigins.includes(origin)){
+            callback(null, true);
+        }
+        else{
+            console.log('CORS block for origin:', origin);
+            callback(new Error('Not allowed by CORS'), false);
+        }
+    },
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
+
 app.use(express.json());
 
 // Health Check
