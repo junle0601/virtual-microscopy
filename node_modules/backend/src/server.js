@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URK || '*',
+    origin: process.env.FRONTEND_URL || '*',
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -43,79 +43,95 @@ app.get('/api/sessions', async (req, res) => {
 });
 
 app.post('/api/sessions', async (req, res) => {
-    const { sessionId, caseSelected = '', status = 'active' } = req.body;
+    try{
+        const { sessionId, caseSelected = '', status = 'active' } = req.body;
 
-    if(!sessionId){
-        return res.status(400).json(
-            {
-                code: 400,
-                message: 'sessionId is required'
-            }
-        )
+        if(!sessionId){
+            return res.status(400).json(
+                {
+                    code: 400,
+                    message: 'sessionId is required'
+                }
+            )
+        }
+
+        const record = {
+            id: uuidv4(),
+            sessionId,
+            caseSelected,
+            status,
+            created: new Date().toISOString(),
+            updated: new Date().toISOString(),
+        };
+
+        const saved = await db.saveSession(record);
+        res.status(201).json(saved);
     }
-
-    const record = {
-        id: uuidv4(),
-        sessionId,
-        caseSelected,
-        status,
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-    };
-
-    const saved = await db.saveSession(record);
-    res.status(201).json(saved);
+    catch (err){
+        console.error('POST /api/sessions error:', err);
+        res.status(500).json({
+            code: 500,
+            message: err.message || 'Internal Server Error'})
+    }
+    
 
 });
 
 app.patch('/api/sessions/:id', async (req, res) => {
-    const record = await db.getSessionId(req.params.id);
+    try{
 
-    if(!record){
-        return res.status(404).json({
-            code: 404,
-            message: 'Session not found'
-        })
+        const record = await db.getSessionId(req.params.id);
+
+        if(!record){
+            return res.status(404).json({
+                code: 404,
+                message: 'Session not found'
+            })
+        }
+
+        const updated = {
+            id:           existing.id,
+            sessionId:    existing.session_id,
+            caseSelected: req.body.caseSelected ?? existing.case_selected,
+            status:       req.body.status ?? existing.status,
+        }
+
+        const saved = await db.saveSession(updated);
+        res.json(saved);
+    }
+    catch (err){
+        console.error(`PATCH /api/sessions/${req.params.id} error:`, err);
+        return res.status(500).json({
+            code: 500,
+            message: err.message || 'Internal Server Error'
+        });
     }
 
-    const updated = {
-        ...record,
-        ...req.body,
-        id: record.id,
-        updated: new Date().toISOString(),
-    }
-
-    const saved = await db.saveSession(updated);
-    res.json(saved);
+    
 });
 
 // Student Responses
 app.post('/api/student_responses', async (req, res) => {
-    const { sessionId, phase, responses, score, totalQuestions, correctAnswers } = req.body;
+    try {
+        const { sessionId, phase, responses, score, totalQuestions, correctAnswers } = req.body;
+        if (!sessionId || !phase) return res.status(400).json({ code: 400, message: 'sessionId and phase are required' });
 
-    if(!sessionId || !phase){
-        return res.status(400).json({
-            code: 400,
-            message: 'sessionId and phase are required'
-        });
+        const record = {
+            id: uuidv4(), sessionId, phase,
+            responses: responses || {},
+            score: score ?? null,
+            totalQuestions: totalQuestions ?? null,
+            correctAnswers: correctAnswers ?? null,
+        };
+
+        const saved = await db.saveStudentResponse(record);
+        res.status(201).json(saved);
+    } catch (err) {
+        console.error('POST /api/student_responses error:', err);
+        res.status(500).json({ code: 500, message: err.message });
     }
-
-    const record = {
-        id: uuidv4(),
-        sessionId,
-        phase,
-        responses: responses || {},
-        score: score ?? null,
-        totalQuestions: totalQuestions ?? null,
-        correctAnswers: correctAnswers ?? null,
-        created: new Date().toISOString(),
-        updated: new Date().toISOString()
-    };
-
-    const saved = await db.saveStudentResponse(record);
-    res.status(201).json(saved);
-
 });
+
 
 app.get('/api/student_responses', async (req, res) => {
     const { sessionId } = req.query;
@@ -127,28 +143,24 @@ app.get('/api/student_responses', async (req, res) => {
 
 // Assessment Scores
 app.post('/api/assessment_scores', async (req, res) => {
-    const { sessionId, phase, score, totalQuestions } = req.body;
+    try {
+        const { sessionId, phase, score, totalQuestions } = req.body;
+        if (!sessionId || !phase) return res.status(400).json({ code: 400, message: 'sessionId and phase are required' });
 
-    if( !sessionId || !phase){
-        return res.status(400).json({
-            code: 400,
-            message: 'sessionId and phase are required'
-        });
+        const record = {
+            id: uuidv4(), sessionId, phase,
+            score: score ?? null,
+            totalQuestions: totalQuestions ?? null,
+        };
+
+        const saved = await db.saveAssessmentScore(record);
+        res.status(201).json(saved);
+    } catch (err) {
+        console.error('POST /api/assessment_scores error:', err);
+        res.status(500).json({ code: 500, message: err.message });
     }
-
-    const record = {
-        id: uuidv4(),
-        sessionId,
-        phase,
-        score: score ?? null,
-        totalQuestions: totalQuestions ?? null,
-        created: new Date().toISOString(),
-        updated: new Date().toISOString()
-    };
-
-    const saved = await db.saveAssessmentScore(record);
-    res.status(201).json(saved);
 });
+
 
 app.get('/api/assessment_scores', async (req, res) => {
     const { sessionId } = req.query;
