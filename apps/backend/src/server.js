@@ -19,6 +19,7 @@ app.use(cors({
 
         const allowedOrigins = [
             process.env.FRONTEND_URL,
+            'https://yixuan-website.netlify.app',
              'http://localhost:3000',
              'http://localhost:5173'
         ].filter(Boolean);
